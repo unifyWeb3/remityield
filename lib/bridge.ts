@@ -10,5 +10,5 @@ export async function bridgeFunds(amount: string) {
   // Requires ConnectedEthereumWallet — see docs.starknet.io/build/starkzap/bridging
   console.warn("Real L1->L2 bridging requires an active MetaMask connection. Please enable DEMO_MODE.");
   return { success: false, error: "L1 Wallet Required" };
-  // throw new Error("Enable DEMO_MODE for now");
+  
 }
