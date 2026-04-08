@@ -1,23 +1,13 @@
+// lib/bridge.ts
 import { DEMO_MODE } from "./demo";
-import { initWallet } from "./sdk";
 
-export async function bridgeFunds(amount: string) {
+export async function bridgeFunds(wallet: any, amount: string) {
   if (DEMO_MODE) {
     await new Promise((r) => setTimeout(r, 1500));
     return { success: true, mock: true };
   }
 
-  try {
-    const { wallet } = await initWallet();
-    
-    // Real StarkZap bridge call
-    // Cast to 'any' to bypass Vercel's strict TypeScript check for alpha SDKs
-    const tx = await (wallet as any).bridge().deposit({ amount });
-    await tx.wait();
-    
-    return { success: true, hash: tx.hash };
-  } catch (error) {
-     console.error("Bridge failed:", error);
-     return { success: false };
-  }
+  // Real bridging requires a ConnectedEthereumWallet — implemented in Phase 4
+  // See: https://docs.starknet.io/build/starkzap/bridging
+  throw new Error("Real bridging not yet implemented — enable DEMO_MODE");
 }
