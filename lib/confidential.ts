@@ -1,22 +1,20 @@
 import { DEMO_MODE } from "./demo";
-import { initWallet } from "./sdk";
 
 export async function getConfidentialState() {
   if (DEMO_MODE) {
-    await new Promise((r) => setTimeout(r, 800));
-    return { isPrivate: true, hiddenBalance: 100, mock: true };
+    return { isPrivate: true, balance: 0, pending: 100, mock: true };
   }
 
-  try {
-    const { wallet } = await initWallet();
-    
-    // Real Tongo SDK initialization
-    const tongo = await wallet.confidential();
-    const state = await tongo.getState();
-    
-    return { isPrivate: true, state, mock: false };
-  } catch (error) {
-     console.error("Tongo read failed:", error);
-     return { isPrivate: false, error: "Tongo SDK failed" };
+  // Real Tongo requires TongoConfidential with a separate private key
+  // See: docs.starknet.io/build/starkzap/confidential
+  throw new Error("Enable DEMO_MODE for now");
+}
+
+export async function withdrawConfidential(amount: string) {
+  if (DEMO_MODE) {
+    await new Promise((r) => setTimeout(r, 1200));
+    return { success: true, mock: true };
   }
+
+  throw new Error("Enable DEMO_MODE for now");
 }
