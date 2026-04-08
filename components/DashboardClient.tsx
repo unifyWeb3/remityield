@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DEMO_MODE, simulateReceiveFlow } from "@/lib/demo";
 import ReceiveAnimation from "./ReceiveAnimation";
 import YieldTicker from "./YieldTicker";
+import Link from "next/link";
 
 interface DashboardClientProps {
   address: string;
@@ -74,12 +75,14 @@ export default function DashboardClient({ address }: DashboardClientProps) {
           {isSimulating ? "Processing..." : "▶ Simulate Receive $100"}
         </button>
 
-        <button
-          disabled={step !== "earning"}
-          className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-4 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          Withdraw Funds
-        </button>
+        <Link href={step === "earning" ? "/withdraw" : "#"}>
+          <button
+            disabled={step !== "earning"}
+            className="w-full bg-slate-800 hover:bg-slate-700 text-white font-semibold py-4 rounded-xl transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            Withdraw Funds
+          </button>
+        </Link>
       </div>
     </div>
   );
