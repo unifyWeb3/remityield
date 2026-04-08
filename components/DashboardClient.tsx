@@ -5,17 +5,20 @@ import { DEMO_MODE, simulateReceiveFlow } from "@/lib/demo";
 import ReceiveAnimation from "./ReceiveAnimation";
 import YieldTicker from "./YieldTicker";
 
-export default function DashboardClient({ address, initialApy = 4.2, initialBalance = 0 }: { address: string, initialApy?: number, initialBalance?: number }) {
+interface DashboardClientProps {
+  address: string;
+}
+
+export default function DashboardClient({ address }: DashboardClientProps) {
   const [step, setStep] = useState<string>("idle");
-  const [balance, setBalance] = useState<number>(initialBalance);
+  const [balance, setBalance] = useState<number>(0);
   const [depositTime, setDepositTime] = useState<number>(0);
   const [isSimulating, setIsSimulating] = useState(false);
 
   const handleSimulate = async () => {
     setIsSimulating(true);
-    setBalance(0); // Reset for replayability
+    setBalance(0);
 
-    // This calls the demo engine we just pasted!
     const result = await simulateReceiveFlow((newStep) => {
       setStep(newStep);
     });
@@ -25,12 +28,10 @@ export default function DashboardClient({ address, initialApy = 4.2, initialBala
     setIsSimulating(false);
   };
 
-  // Truncate address for a cleaner UI (e.g. 0x1234...5678)
   const shortAddress = `${address.slice(0, 6)}...${address.slice(-4)}`;
 
   return (
     <div className="max-w-md mx-auto mt-12 space-y-6">
-      {/* Header & Demo Badge */}
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold tracking-tight">remitYield</h1>
         {DEMO_MODE && (
@@ -40,7 +41,6 @@ export default function DashboardClient({ address, initialApy = 4.2, initialBala
         )}
       </div>
 
-      {/* Wallet Info */}
       <div className="px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl flex justify-between items-center shadow-sm">
         <span className="text-slate-400 text-sm">Starknet Address</span>
         <span className="font-mono text-emerald-400 text-sm bg-emerald-400/10 px-2 py-1 rounded">
@@ -48,35 +48,23 @@ export default function DashboardClient({ address, initialApy = 4.2, initialBala
         </span>
       </div>
 
-      {/* Main Display Area */}
       <div className="min-h-[200px] flex flex-col justify-center">
         {step === "idle" && (
           <div className="text-center">
-            <div className="text-5xl font-bold text-slate-700 font-mono mb-2">
-              $0.00
-            </div>
-            <p className="text-slate-500 text-sm">
-              Waiting for incoming funds...
-            </p>
+            <div className="text-5xl font-bold text-slate-700 font-mono mb-2">$0.00</div>
+            <p className="text-slate-500 text-sm">Waiting for incoming funds...</p>
           </div>
         )}
 
-        {/* The Animation Sequence */}
         {step !== "idle" && step !== "earning" && (
           <ReceiveAnimation currentStep={step} />
         )}
 
-        {/* The Final Yield State */}
         {step === "earning" && (
-          <YieldTicker
-            principal={balance}
-            apyPercent={initialApy} // Now using the live data!
-            startTime={depositTime}
-          />
+          <YieldTicker principal={balance} apyPercent={4.2} startTime={depositTime} />
         )}
       </div>
 
-      {/* Action Buttons */}
       <div className="pt-8 space-y-3">
         <button
           onClick={handleSimulate}
