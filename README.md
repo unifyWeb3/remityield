@@ -42,12 +42,12 @@ Sender abroad                           Recipient at home
   └──────────────┘                            │
                                               ▼
                                    ┌──────────────────┐
-                                   │  Auto-deposited   │
-                                   │  into Vesu        │
-                                   │  lending pool     │
-                                   │                   │
-                                   │  earning ~4.2%    │
-                                   │  APY instantly    │
+                                   │  Auto-deposited  │
+                                   │  into Vesu       │
+                                   │  lending pool    │
+                                   │                  │
+                                   │  earning ~4.2    │
+                                   │  APY instantly   │
                                    └──────────────────┘
                                               │
                                               │  Withdraw
@@ -61,13 +61,13 @@ the magic moment : your family sends you money. it arrives privately. and alread
 
 ---
 
-## before vs After
+## before vs after
 
 | | western Union | remitYield |
 |---|---|---|
 | fees | $5–$10 per $100 | $0 (gasless via AVNU Paymaster) |
 | speed | 1–3 business days | ~30 seconds |
-| privacy | bank sees everything | amounts hidden (Tongo confidential transfers) |
+| privacy | bank sees everything | amounts hidden (tongo confidential transfers) |
 | yield on idle money | 0% | ~4.2% APY (vesu lending) |
 | login required | Photo ID + forms + physical visit | email or google |
 | recipient needs | bank account or pickup location | just an email address |
@@ -118,20 +118,20 @@ this project uses 6 StarkZap SDK modules - each serving a clear purpose in the p
 the most powerful integration is the Tx builder. instead of 3 separate transactions (each requiring gas, each with failure risk), we batch the entire receive → yield flow:
 
 ```typescript
-// One atomic transaction: rollover + withdraw from Tongo + deposit to Vesu
+// one atomic transaction: rollover + withdraw from Tongo + deposit to Vesu
 const tx = await wallet
   .tx()
-  .add(...rolloverCalls)                    // Activate pending confidential balance
-  .confidentialWithdraw(confidential, {     // Move from private to public
+  .add(...rolloverCalls)                    // activate pending confidential balance
+  .confidentialWithdraw(confidential, {     // move from private to public
     amount: Amount.parse("100", USDC),
     to: wallet.address,
     sender: wallet.address,
   })
-  .lendDeposit({                            // Auto-deposit into yield pool
+  .lendDeposit({                            // auto-deposit into yield pool
     token: USDC,
     amount: Amount.parse("100", USDC),
   })
-  .send({ feeMode: "sponsored" });          // Gasless via AVNU
+  .send({ feeMode: "sponsored" });          // gasless via AVNU
 await tx.wait();
 ```
 
@@ -146,39 +146,39 @@ this means: if any step fails, none of them execute. the user's money is never i
 │                        Frontend                             │
 │                    Next.js 14 (App Router)                  │
 │                                                             │
-│  ┌─────────┐   ┌───────────┐   ┌──────────┐               │
-│  │ landing  │   │ dashboard │   │ withdraw │               │
-│  │  page    │   │   Page    │   │   Page   │               │
-│  └─────────┘   └───────────┘   └──────────┘               │
+│  ┌─────────┐   ┌───────────┐   ┌──────────┐                 │
+│  │ landing  │   │ dashboard │   │ withdraw │                │
+│  │  page    │   │   Page    │   │   Page   │                │
+│  └─────────┘   └───────────┘   └──────────┘                 │
 │                       │                                     │
-│              ┌────────┴─────────┐                          │
-│              │   demo mode      │  ← toggle via env var    │
-│              │   (mock flows)   │                          │
-│              └────────┬─────────┘                          │
+│              ┌────────┴─────────┐                           │
+│              │   demo mode      │  ← toggle via env var     │
+│              │   (mock flows)   │                           │
+│              └────────┬─────────┘                           │
 │                       │                                     │
-│              ┌────────┴─────────┐                          │
-│              │  starkZap SDK    │                          │
-│              │  (real calls)    │                          │
-│              └──────────────────┘                          │
+│              ┌────────┴─────────┐                           │
+│              │  starkZap SDK    │                           │ 
+│              │  (real calls)    │                           │
+│              └──────────────────┘                           │
 └─────────────────────┬───────────────────────────────────────┘
                       │
 ┌─────────────────────┴───────────────────────────────────────┐
-│                    backend (API Routes)                      │
+│                    backend (API Routes)                     │
 │                                                             │
-│  POST /api/wallet/create  ← creates starknet wallet (privy)│
-│  POST /api/wallet/sign    ← signs tx hashes (privy)        │
+│  POST /api/wallet/create  ← creates starknet wallet (privy) │
+│  POST /api/wallet/sign    ← signs tx hashes (privy)         │
 │                                                             │
 │  privy manages keys server-side                             │
 │  private keys never touch the browser                       │
 └─────────────────────┬───────────────────────────────────────┘
                       │
 ┌─────────────────────┴───────────────────────────────────────┐
-│                    starknet sepolia                          │
+│                    starknet sepolia                         │
 │                                                             │
-│  ┌──────┐  ┌───────┐  ┌──────┐  ┌──────┐  ┌────────────┐ │
-│  │privy │  │ AVNU  │  │tongo │  │ vesu │  │ starkZap   │ │
-│  │wallet│  │paymas.│  │(ZK)  │  │(lend)│  │ Tx builder │ │
-│  └──────┘  └───────┘  └──────┘  └──────┘  └────────────┘ │
+│  ┌──────┐  ┌───────┐  ┌──────┐  ┌──────┐  ┌────────────┐    │
+│  │privy │  │ AVNU  │  │tongo │  │ vesu │  │ starkZap   │    │
+│  │wallet│  │paymas.│  │(ZK)  │  │(lend)│  │ Tx builder │    │
+│  └──────┘  └───────┘  └──────┘  └──────┘  └────────────┘    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -207,19 +207,19 @@ blockchain testnets are unreliable during live demos. transactions can take minu
 
 ## tech stack
 
-| Layer | Technology |
+| layer | technology |
 |---|---|
-| Framework | Next.js 14 (App Router, TypeScript) |
-| Auth & Wallets | Privy (`@privy-io/node`  -  server-side key management) |
-| blockchain SDK | StarkZap (TypeScript SDK for Starknet) |
-| Gas Sponsorship | AVNU Paymaster |
-| Privacy | Tongo (confidential transfers via ZK proofs) |
-| Yield | Vesu (lending/supply protocol) |
-| bridging | StarkZap bridge Module (ethereum CCTP) |
-| Animations | Framer Motion |
-| Styling | Tailwind CSS (dark theme) |
-| Network | Starknet Sepolia (testnet) |
-| Deployment | Vercel |
+| ramework | Next.js 14 (App Router, TypeScript) |
+| auth & Wallets | privy (`@privy-io/node`  -  server-side key management) |
+| blockchain SDK | starkZap (TypeScript SDK for Starknet) |
+| gas Sponsorship | AVNU Paymaster |
+| privacy | Tongo (confidential transfers via ZK proofs) |
+| yield | Vesu (lending/supply protocol) |
+| bridging | starkZap bridge Module (ethereum CCTP) |
+| animations | framer Motion |
+| styling | tailwind CSS (dark theme) |
+| network | starknet Sepolia (testnet) |
+| deployment | vercel |
 
 ---
 
@@ -296,18 +296,18 @@ npm run dev
 ### environment Variables
 
 ```env
-# Privy (server-side  -  no NeXT_PUbLIC prefix)
+# privy (server-side)
 PRIVY_APP_ID=your_privy_app_id
 PRIVY_APP_SeCReT=your_privy_app_secret
 
-# Starknet RPC
-NeXT_PUbLIC_STARKNeT_RPC_URL=https://starknet-sepolia.g.alchemy.com/v2/YOUR_KeY
+# starknet RPC
+NeXT_PUbLIC_STARKNeT_RPC_URL=YOUR_KeY
 
 # AVNU Paymaster
-NeXT_PUbLIC_PAYMASTeR_URL=https://starknet.paymaster.avnu.fi
+NeXT_PUbLIC_PAYMASTeR_URL=
 NeXT_PUbLIC_PAYMASTeR_API_KeY=your_avnu_key
 
-# App
+# app
 NeXT_PUbLIC_DeMO_MODe=true
 NeXT_PUbLIC_APP_URL=http://localhost:3000
 ```
@@ -315,45 +315,45 @@ NeXT_PUbLIC_APP_URL=http://localhost:3000
 ### build
 
 ```bash
-# Production build (uses webpack for Node.js module compatibility)
+# production build (uses webpack for Node.js module compatibility)
 npx next build --webpack
 ```
 
 ---
 
-## User Flows
+## user Flows
 
-### Flow 1: Receive + Auto-Yield (Demo)
-
-```
-1. Open /dashboard
-2. Real Starknet wallet created via Privy (unique per session)
-3. Click "Simulate Receive $100"
-4. Animation plays: bridging → Received → Deploying to Yield → earning
-5. Yield ticker starts counting in real-time
-6. Transaction appears in Recent Activity
-```
-
-### Flow 2: Withdraw
+### flow 1: receive + auto-Yield (demo)
 
 ```
-1. Click "Withdraw Funds" from dashboard
+1. open /dashboard
+2. real starknet wallet created via Privy (unique per session)
+3. click "Simulate Receive $100"
+4. animation plays: bridging → received → deploying to yield → earning
+5. yield ticker starts counting in real-time
+6. transaction appears in Recent Activity
+```
+
+### flow 2 : withdraw
+
+```
+1. click "withdraw funds" from dashboard
 2. enter amount (or tap MAX)
-3. Confirm withdrawal
-4. Success screen shows amount sent + remaining balance
-5. Transaction logged in history
-6. Navigate back to dashboard  -  balance updated
+3. confirm withdrawal
+4. success screen shows amount sent + remaining balance
+5. transaction logged in history
+6. navigate back to dashboard  -  balance updated
 ```
 
-### Flow 3: Landing Page
+### flow 3 : landing Page
 
 ```
-1. Open / (root)
-2. Hero with animated particles + glow orbs
-3. Scroll to before/After comparison (with live yield ticker in the "After" card)
-4. How It Works  -  3 interactive step cards
-5. StarkZap modules grid
-6. CTA → Dashboard
+1. open / (root)
+2. hero with animated particles + glow orbs
+3. scroll to before/adter comparison (with live yield ticker in the "after" card)
+4. how It Works  -  3 interactive step cards
+5. starkZap modules grid
+6. CTA → dashboard
 ```
 
 ---
@@ -382,7 +382,7 @@ privy supports email/social login for non-crypto users  -  our target audience. 
 
 privy manages private keys on their infrastructure. the browser never touches a private key. This is the security model that fintech apps require  -  and it's why we use Next.js API routes for the `/api/wallet/sign` endpoint.
 
-### why Ddemo mode ??
+### why demo mode ??
 
 production blockchain apps are unreliable during live demos. Instead of risking a failed transaction during a pitch, i built Demo Mode as a first-class feature - same UI, same animations, same data flow with simulated blockchain delays. the real SDK calls exist in the codebase, wrapped in `DeMO_MODe` checks.
 
@@ -394,7 +394,7 @@ three separate transactions = three chances for failure, three gas costs, three 
 
 ## hackathon judging criteria alignment
 
-| Criteria | How remitYield Delivers |
+| criteria | how remitYield delivers |
 |---|---|
 | real usefulness | cross-border remittances are a $700b+ market with real pain points (fees, delays, no yield) |
 | clear StarkZap integration | 6 modules used  -  wallet, bridging, confidential, lending, paymaster, tx builder |
@@ -410,15 +410,15 @@ three separate transactions = three chances for failure, three gas costs, three 
 
 built by [Unify/ @unifyWeb3](https://x.com/unifyWeb3)  -  web3 content creator and builder based in West Africa.
 
-### Protocols & Tools
+### protocols & Tools
 
-- [StarkZap SDK](https://docs.starknet.io/build/starkzap/overview)  -  Unified TypeScript SDK for Starknet
-- [Starknet](https://starknet.io)  -  L2 blockchain with native account abstraction
-- [Privy](https://privy.io)  -  Wallet infrastructure and auth
-- [AVNU](https://avnu.fi)  -  DeX aggregator and paymaster
-- [Vesu](https://vesu.xyz)  -  Lending and borrowing protocol
-- [Tongo](https://tongo.cash)  -  Confidential transfers via ZK proofs
-- [Framer Motion](https://motion.dev)  -  Animation library
+- [starkZap SDK](https://docs.starknet.io/build/starkzap/overview)  -  unified TypeScript SDK for Starknet
+- [starknet](https://starknet.io)  -  L2 blockchain with native account abstraction
+- [privy](https://privy.io)  -  wallet infrastructure and auth
+- [AVNU](https://avnu.fi)  -  deX aggregator and paymaster
+- [vesu](https://vesu.xyz)  -  lending and borrowing protocol
+- [tongo](https://tongo.cash)  -  confidential transfers via ZK proofs
+- [framer Motion](https://motion.dev)  -  animation library
 
 ---
 
