@@ -14,19 +14,19 @@
 
 every year, migrant workers send $700b+ in remittances to their families back home. Here's what they face:
 
-| Pain Point | Reality |
+| pain Point | reality |
 |---|---|
-| Fees | Western Union charges 5–10% per transfer ($5–$10 on every $100) |
-| Speed | 1–3 business days for funds to arrive |
-| Privacy | banks, intermediaries, and block explorers see every amount |
-| Idle money | Received funds sit in wallets or bank accounts earning 0% yield |
-| Access barriers | Recipients need bank accounts, photo ID, or physical pickup locations |
+| fees | western union charges 5–10% per transfer ($5–$10 on every $100) |
+| speed | 1–3 business days for funds to arrive |
+| privacy | banks, intermediaries, and block explorers see every amount |
+| idle money | received funds sit in wallets or bank accounts earning 0% yield |
+| access barriers | recipients need bank accounts, photo ID, or physical pickup locations |
 
 a worker in London sends $200 home to Lagos - after fees, $180 arrives, three days later - that $180 sits in a mobile money wallet and after one year, inflation has eaten into its value. The money never worked. It just waited.
 
 ---
 
-## The Solution
+## the solution
 
 remitYield turns every remittance into a yield-generating event.
 
@@ -63,14 +63,14 @@ the magic moment : your family sends you money. it arrives privately. and alread
 
 ## before vs After
 
-| | Western Union | remitYield |
+| | western Union | remitYield |
 |---|---|---|
-| Fees | $5–$10 per $100 | $0 (gasless via AVNU Paymaster) |
-| Speed | 1–3 business days | ~30 seconds |
-| Privacy | bank sees everything | Amounts hidden (Tongo confidential transfers) |
-| Yield on idle money | 0% | ~4.2% APY (Vesu lending) |
-| Login required | Photo ID + forms + physical visit | email or Google |
-| Recipient needs | bank account or pickup location | Just an email address |
+| fees | $5–$10 per $100 | $0 (gasless via AVNU Paymaster) |
+| speed | 1–3 business days | ~30 seconds |
+| privacy | bank sees everything | amounts hidden (Tongo confidential transfers) |
+| yield on idle money | 0% | ~4.2% APY (vesu lending) |
+| login required | Photo ID + forms + physical visit | email or google |
+| recipient needs | bank account or pickup location | just an email address |
 
 ---
 
