@@ -6,6 +6,8 @@ let _earned = 0;
 let _depositTime = 0;
 let _hasReceived = false;
 let _transactions: Transaction[] = [];
+let _walletAddress = "";
+
 
 export interface Transaction {
   id: string;
@@ -29,6 +31,9 @@ export const store = {
   set hasReceived(v: boolean) { _hasReceived = v; },
 
   get transactions() { return _transactions; },
+
+  get walletAddress() { return _walletAddress; },
+set walletAddress(v: string) { _walletAddress = v; },
 
   addTransaction(tx: Omit<Transaction, "id">) {
     _transactions.unshift({

@@ -7,20 +7,58 @@ function getBaseUrl() {
   return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 }
 
+const WALLET_STORAGE_KEY = "remityield_wallet";
+
+function getSavedWallet() {
+  try {
+    const saved = sessionStorage.getItem(WALLET_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveWallet(wallet: { id: string; address: string; publicKey: string }) {
+  try {
+    sessionStorage.setItem(WALLET_STORAGE_KEY, JSON.stringify(wallet));
+  } catch {}
+}
+
 export async function initWallet() {
-  // 1. THE SAFETY NET (Bypasses Vercel fetch errors completely for the demo)
+  const baseUrl = getBaseUrl();
+
+  // Always create a real Privy wallet — even in demo mode
+  // This gives every user a unique real Starknet address
+  let privyWallet = getSavedWallet();
+
+  if (!privyWallet) {
+    try {
+      const res = await fetch(`${baseUrl}/api/wallet/create`, { method: "POST" });
+      if (!res.ok) throw new Error("API route failed");
+      const data = await res.json();
+      privyWallet = data.wallet;
+      saveWallet(privyWallet);
+    } catch (error) {
+      console.error("Wallet creation failed:", error);
+      return {
+        sdk: {} as any,
+        wallet: {} as any,
+        address: "0x0000...wallet_unavailable",
+      };
+    }
+  }
+
+  // In demo mode, skip SDK connection but return the real address
   if (DEMO_MODE) {
     return {
       sdk: {} as any,
       wallet: {} as any,
-      address: "0x054d3c92...44c4" // Sleek mock address for the UI
+      address: privyWallet.address,
     };
   }
 
-  // 2. THE REAL ARCHITECTURE (Claude's precise StarkZap implementation)
+  // Full SDK connection for real blockchain calls
   try {
-    const baseUrl = getBaseUrl();
-
     const sdk = new StarkZap({
       network: "sepolia",
       rpcUrl: process.env.NEXT_PUBLIC_STARKNET_RPC_URL,
@@ -31,11 +69,6 @@ export async function initWallet() {
         },
       },
     });
-
-    const res = await fetch(`${baseUrl}/api/wallet/create`, { method: "POST" });
-    if (!res.ok) throw new Error("API Route Failed");
-    
-    const { wallet: privyWallet } = await res.json();
 
     const signer = new PrivySigner({
       walletId: privyWallet.id,
@@ -52,8 +85,7 @@ export async function initWallet() {
 
     return { sdk, wallet, address: privyWallet.address };
   } catch (error) {
-    console.error("Wallet SDK Error:", error);
-    // Safe fallback so the UI never crashes
-    return { sdk: {} as any, wallet: {} as any, address: "0x0000...0000" };
+    console.error("SDK connection failed:", error);
+    return { sdk: {} as any, wallet: {} as any, address: privyWallet.address };
   }
 }

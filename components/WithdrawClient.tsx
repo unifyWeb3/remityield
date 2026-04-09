@@ -11,17 +11,31 @@ interface WithdrawClientProps {
   earned: number;
 }
 
-export default function WithdrawClient({ address, balance, earned }: WithdrawClientProps) {
+export default function WithdrawClient({
+  address,
+  balance,
+  earned,
+}: WithdrawClientProps) {
   const [amount, setAmount] = useState("");
-  const [status, setStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "processing" | "success" | "error"
+  >("idle");
   const [currentBalance, setCurrentBalance] = useState(balance);
   const [currentEarned, setCurrentEarned] = useState(earned);
+  const [copied, setCopied] = useState(false);
 
   const totalBalance = currentBalance + currentEarned;
 
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   const handleWithdraw = async () => {
     const withdrawAmount = parseFloat(amount);
-    if (!withdrawAmount || withdrawAmount <= 0 || withdrawAmount > totalBalance) return;
+    if (!withdrawAmount || withdrawAmount <= 0 || withdrawAmount > totalBalance)
+      return;
 
     setStatus("processing");
 
@@ -61,7 +75,9 @@ export default function WithdrawClient({ address, balance, earned }: WithdrawCli
               <span className="text-slate-400 text-lg">←</span>
             </button>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight text-white">Withdraw</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Withdraw
+          </h1>
         </div>
         {DEMO_MODE && (
           <span className="px-2 py-1 bg-amber-500/10 text-amber-500 text-xs font-bold rounded-full border border-amber-500/20">
@@ -81,11 +97,15 @@ export default function WithdrawClient({ address, balance, earned }: WithdrawCli
         </div>
         <div className="flex justify-between text-xs">
           <span className="text-slate-500">Principal</span>
-          <span className="text-slate-300 font-mono">${currentBalance.toFixed(2)}</span>
+          <span className="text-slate-300 font-mono">
+            ${currentBalance.toFixed(2)}
+          </span>
         </div>
         <div className="flex justify-between text-xs">
           <span className="text-slate-500">Yield earned</span>
-          <span className="text-emerald-400 font-mono">+${currentEarned.toFixed(7)}</span>
+          <span className="text-emerald-400 font-mono">
+            +${currentEarned.toFixed(7)}
+          </span>
         </div>
       </div>
 
@@ -93,11 +113,15 @@ export default function WithdrawClient({ address, balance, earned }: WithdrawCli
       {status === "success" && (
         <div className="rounded-2xl p-6 border border-emerald-500/20 bg-[#0c1322] shadow-xl text-center space-y-3">
           <div className="text-4xl">✅</div>
-          <div className="text-lg font-semibold text-emerald-400">Withdrawal Complete</div>
+          <div className="text-lg font-semibold text-emerald-400">
+            Withdrawal Complete
+          </div>
           <div className="text-sm text-slate-400">
             ${parseFloat(amount).toFixed(2)} USDC sent to {shortAddress}
           </div>
-          <div className="text-xs text-slate-500">Zero gas fees · Powered by AVNU Paymaster</div>
+          <div className="text-xs text-slate-500">
+            Zero gas fees · Powered by AVNU Paymaster
+          </div>
           <div className="text-xs text-slate-600 font-mono mt-2">
             Remaining: ${store.balance.toFixed(2)} USDC
           </div>
@@ -136,19 +160,22 @@ export default function WithdrawClient({ address, balance, earned }: WithdrawCli
             )}
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm text-slate-400">Withdraw to</label>
-            <div className="px-4 py-3 bg-[#0c1322] border border-[#1a2540] rounded-xl flex justify-between items-center">
-              <span className="text-sm text-slate-400">My Wallet</span>
-              <span className="font-mono text-emerald-400 text-xs bg-emerald-400/10 px-2 py-1 rounded">
-                {shortAddress}
-              </span>
-            </div>
+          <div
+            onClick={handleCopy}
+            className="px-4 py-3 bg-[#0c1322] border border-[#1a2540] rounded-xl flex justify-between items-center cursor-pointer hover:border-emerald-500/30 transition-all active:scale-[0.99]"
+            title="click to copy full address"
+          >
+            <span className="text-sm text-slate-400">My Wallet</span>
+            <span className="font-mono text-emerald-400 text-xs bg-emerald-400/10 px-2 py-1 rounded">
+              {copied ? "✓ Copied!" : shortAddress}
+            </span>
           </div>
 
           <div className="flex justify-between items-center px-1">
             <span className="text-xs text-slate-500">Network fee</span>
-            <span className="text-xs text-emerald-400 font-semibold">$0.00 (gasless)</span>
+            <span className="text-xs text-emerald-400 font-semibold">
+              $0.00 (gasless)
+            </span>
           </div>
 
           <button
@@ -172,7 +199,9 @@ export default function WithdrawClient({ address, balance, earned }: WithdrawCli
           </button>
 
           {status === "error" && (
-            <p className="text-sm text-red-400 text-center">Withdrawal failed. Please try again.</p>
+            <p className="text-sm text-red-400 text-center">
+              Withdrawal failed. Please try again.
+            </p>
           )}
         </>
       )}

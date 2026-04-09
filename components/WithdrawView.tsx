@@ -9,9 +9,17 @@ export default function WithdrawView() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (store.walletAddress) {
+      setAddress(store.walletAddress);
+      return;
+    }
+
     import("@/lib/sdk").then(({ initWallet }) => {
       initWallet()
-        .then(({ address }) => setAddress(address))
+        .then(({ address }) => {
+          store.walletAddress = address;
+          setAddress(address);
+        })
         .catch((err) => setError(err.message));
     });
   }, []);
