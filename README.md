@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/26601571/README.md)
 # remitYield
 
 ### Cross-border payments that earn yield the moment they arrive.
